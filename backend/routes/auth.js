@@ -5,17 +5,19 @@ const { body, validationResult } = require('express-validator');
 const bcrypt=require("bcryptjs")
 const jwt=require("jsonwebtoken")
 const fetchUser=require('../middleware/fetchuser')
-                         
 
-const JWT_SECRET="arshverma"
+
+const JWT_SECRET="Harryisagoodb$oy"
 
 
 //ROUTE 1:create a user using POST "/api/auth/createuser".No login required
-router.post('/createuser',[
+router.post('/createuser', [
   body('name',"Enter name with 5 or more characters").isLength({min :5}),
   body('email',"Enter valid email").isEmail(),
   body('password',"Enter password which is greater than 5 characters").isLength({ min: 5 })
-] , async(req,res)=>{
+]
+
+, async(req,res)=>{
   //if errors,return bad request 
    const errors = validationResult(req);
     if (!errors.isEmpty()) {
