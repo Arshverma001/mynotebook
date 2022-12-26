@@ -10,6 +10,7 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
+import Alert from './components/Alert';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
     <NoteState>
     <Router>
     <Navbar/>
+    <Alert message="jawdd toh hai"/>
     <div className='container'>
     <Switch>
           <Route exact path="/">
