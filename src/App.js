@@ -11,6 +11,8 @@ import {
   Route,
 } from "react-router-dom";
 import Alert from './components/Alert';
+import Login from './components/Login';
+import Signup from './components/Signup';
 
 
 function App() {
@@ -27,6 +29,12 @@ function App() {
           </Route>
           <Route exact path="/about">
             <About />
+          </Route>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+          <Route exact path="/signup">
+            <Signup />
           </Route>
         </Switch>
     </div>

@@ -1,30 +1,32 @@
-import React, { useEffect,useRef,useContext,useState } from 'react'
-import noteContext from '../context/notes/noteContext';
-import AddNote from './AddNote';
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import noteContext from "../context/notes/noteContext"
 import Noteitem from './Noteitem';
+import AddNote from './AddNote';
 
 const Notes = () => {
-  const [note, setnote] = useState({"title":"","description":"","tag":"default"})
-    const context = useContext(noteContext)
-    const {notes,getNotes}=context;
-    const ref=useRef(null)
+    const context = useContext(noteContext);
+    const { notes, getNotes, editNote } = context;
+    useEffect(() => {
+        getNotes()
+        // eslint-disable-next-line
+    }, [])
+    const ref = useRef(null)
+    const refClose = useRef(null)
+    const [note, setNote] = useState({id: "", etitle: "", edescription: "", etag: ""})
 
-    useEffect(()=>{
-      getNotes()
-      // eslint-disable-next-line
-    },[])
-
-    const updateNote=(note)=>{
-      ref.current.click()
+    const updateNote = (currentNote) => {
+        ref.current.click();
+        setNote({id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag:currentNote.tag})
     }
-    const handleChange =(e)=>{
-      e.preventDefault();
-      
-     }
-  
-     const onChange =(e)=>{
-       setnote({...note,[e.target.name]:e.target.value})
-     }
+
+    const handleChange = (e)=>{ 
+        editNote(note.id, note.etitle, note.edescription, note.etag)
+        refClose.current.click();
+    }
+
+    const onChange = (e)=>{
+        setNote({...note, [e.target.name]: e.target.value})
+    }
 
   return (
     <>
@@ -45,22 +47,22 @@ const Notes = () => {
       <form>
   <div className="mb-3">
     <label htmlFor="etitle" className="form-label">Title</label>
-    <input type="text" className="form-control" id="etitle" name='etitle' aria-describedby="emailHelp" onChange={onChange}/>
+    <input type="text" className="form-control" id="etitle" name='etitle' value={note.etitle} aria-describedby="emailHelp" onChange={onChange} minLength={5} required/>
   </div>
   <div className="mb-3">
     <label htmlFor="edescription" className="form-label">Description</label>
-    <input type="text" className="form-control" id="edescription" name='edescription' onChange={onChange}/>
+    <input type="text" className="form-control" id="edescription" name='edescription'value={note.edescription} onChange={onChange} minLength={5} required/>
   </div>
   <div className="mb-3">
     <label htmlFor="etag" className="form-label">tag</label>
-    <input type="text" className="form-control" id="etag" name='etag' onChange={onChange}/>
+    <input type="text" className="form-control" id="etag" name='etag' value={note.etag} onChange={onChange}/>
   </div>
   
 </form>
       </div>
       <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" className="btn btn-primary">Update Changes</button>
+        <button  ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button disabled={note.etitle.length<5 || note.edescription.length<5} onClick={handleChange} type="button" className="btn btn-primary">Update Changes</button>
       </div>
     </div>
   </div>
@@ -68,7 +70,9 @@ const Notes = () => {
 
     <div className='row my-3'>
       <h1>Yours notes</h1>
-
+      <div className='container mx-2'>
+      {notes.length===0 && 'NO NOTES TO DISPLAY'}
+      </div>
       {notes.map((note)=>{
         return <Noteitem key={note._id}  updateNote={updateNote}  note={note}/> 
       })}
